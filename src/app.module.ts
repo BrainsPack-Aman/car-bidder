@@ -1,9 +1,21 @@
 import { Module } from '@nestjs/common';
+import {TypeOrmModule} from "@nestjs/typeorm";
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { UsersModule } from './users/users.module.js';
+import { ReportsModule } from './reports/reports.module.js';
+import { User } from './users/users.entity.js';
+import { Report } from './reports/reports.entity.js';
 
 @Module({
-  imports: [],
+  imports: [TypeOrmModule.forRoot({
+    type : "better-sqlite3",
+    database :"db.sqlite",
+    entities:[User , Report],
+    synchronize : true
+  })
+
+    ,UsersModule, ReportsModule],
   controllers: [AppController],
   providers: [AppService],
 })
