@@ -13,7 +13,12 @@ import {
  import { UserDto } from "../users/dtos/user.dto.js";
 
 
- export function Serialize(dto : any){
+ interface ClassConstructor{
+    new (...args : any[]) :{}
+ }
+
+
+ export function Serialize(dto : ClassConstructor){
 
     return UseInterceptors( new SerializeInterceptor(UserDto))
  }
@@ -21,7 +26,7 @@ import {
 
  export class SerializeInterceptor implements NestInterceptor {
 
-    constructor(private dto : any){}
+    constructor(private dto : ClassConstructor){}
 
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
 
