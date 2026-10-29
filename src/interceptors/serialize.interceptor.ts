@@ -2,7 +2,8 @@ import {
     ClassSerializerInterceptor,
     NestInterceptor,
     ExecutionContext,
-    CallHandler 
+    CallHandler, 
+    UseInterceptors
          
  } from "@nestjs/common";
 
@@ -10,6 +11,12 @@ import {
  import {plainToClass} from "class-transformer";
  import { map } from "rxjs";
  import { UserDto } from "../users/dtos/user.dto.js";
+
+
+ export function Serialize(dto : any){
+
+    return UseInterceptors( new SerializeInterceptor(UserDto))
+ }
 
 
  export class SerializeInterceptor implements NestInterceptor {
