@@ -3,10 +3,11 @@ import { CreateUserDto } from './dtos/create-users.dto.js';
 import { UsersService } from './users.service.js';
 import { User } from './users.entity.js';
 import { UpdateUserDto } from './dtos/update-users.dto.js';
-import { SerializeInterceptor } from '../interceptors/serialize.interceptor.js';
+import { Serialize } from '../interceptors/serialize.interceptor.js';
 import { UserDto } from './dtos/user.dto.js';
 
 
+@Serialize(UserDto)
 @Controller('auth')
 export class UsersController {
 
@@ -17,7 +18,8 @@ export class UsersController {
       this.usersService.create(body.email , body.password)
     }
 
-    @UseInterceptors( new SerializeInterceptor(UserDto))
+    // @UseInterceptors( new SerializeInterceptor(UserDto))
+    // @Serialize(UserDto)
     @Get("/:id")
     findOne(@Param("id" , ParseIntPipe) id : number){
         console.log("handler is running")
