@@ -2,8 +2,6 @@ import { BadRequestException, Injectable, NotFoundException, UnauthorizedExcepti
 import { UsersService } from "./users.service.js";
 import { randomBytes , scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
-import { buffer } from "stream/consumers";
-
 const scrypt = promisify(_scrypt);
 
 
