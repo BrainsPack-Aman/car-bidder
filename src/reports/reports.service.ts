@@ -9,10 +9,28 @@ import { User } from '../users/users.entity.js';
 export class ReportsService {
     constructor(@InjectRepository(Report) private repo : Repository<Report>){}
 
-   async create(reportDto : CreateReportDto , user : User){
-          const report = this.repo.create(reportDto);
-          report.user = user;
+   async create(reportDto: CreateReportDto, user: User) {
 
-          return await this.repo.save(report);
+    const report = this.repo.create(reportDto);
+
+    report.user = user;
+
+  
+
+    const savedReport = await this.repo.save(report);
+
+
+    return savedReport;
+}
+
+
+    async updateReport(id : number){
+        const report = await this.repo.findOneBy({id});
+         if(!report){
+            throw new Error(`Report with id ${id} not found`);
+         }
+         
+         report.approved = report.approved ? false : true;
+         return await this.repo.save(report);
     }
 }
