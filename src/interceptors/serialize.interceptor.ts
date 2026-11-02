@@ -20,7 +20,7 @@ import {
 
  export function Serialize(dto : ClassConstructor){
 
-    return UseInterceptors( new SerializeInterceptor(UserDto))
+    return UseInterceptors( new SerializeInterceptor(dto))
  }
 
 
