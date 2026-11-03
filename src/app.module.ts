@@ -12,9 +12,6 @@ import cookieSession from 'cookie-session';
 import { ReportsController } from './reports/reports.controller.js';
 import { UsersController } from './users/users.controller.js';
 
-import ormConfig from '.././ormconfig.js';
-import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
-
 @Module({
   imports: [
 
@@ -23,20 +20,18 @@ import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
      envFilePath:`.env.${process.env.NODE_ENV}`
     }),
 
-    TypeOrmModule.forRoot(
-    ormConfig as TypeOrmModuleOptions
-),
-    // TypeOrmModule.forRootAsync({
-    //   inject :[ConfigService],
-    //   useFactory : (config : ConfigService)=>{
-    //     return {
-    //         type : "better-sqlite3",
-    //         database :config.get<string>('DB_NAME'),
-    //         entities:[User , Report],
-    //         synchronize : true
-    //     }
-    //   }
-    // })
+  
+    TypeOrmModule.forRootAsync({
+      inject :[ConfigService],
+      useFactory : (config : ConfigService)=>{
+        return {
+            type : "better-sqlite3",
+            database :config.get<string>('DB_NAME'),
+            entities:[User , Report],
+            synchronize : true
+        }
+      }
+    }),
   //   TypeOrmModule.forRoot({
   //   type : "better-sqlite3",
   //   database :"db.sqlite",
