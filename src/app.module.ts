@@ -12,6 +12,9 @@ import cookieSession from 'cookie-session';
 import { ReportsController } from './reports/reports.controller.js';
 import { UsersController } from './users/users.controller.js';
 
+import ormConfig from '.././ormconfig.js';
+import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+
 @Module({
   imports: [
 
@@ -20,17 +23,20 @@ import { UsersController } from './users/users.controller.js';
      envFilePath:`.env.${process.env.NODE_ENV}`
     }),
 
-    TypeOrmModule.forRootAsync({
-      inject :[ConfigService],
-      useFactory : (config : ConfigService)=>{
-        return {
-            type : "better-sqlite3",
-            database :config.get<string>('DB_NAME'),
-            entities:[User , Report],
-            synchronize : true
-        }
-      }
-    })
+    TypeOrmModule.forRoot(
+    ormConfig as TypeOrmModuleOptions
+),
+    // TypeOrmModule.forRootAsync({
+    //   inject :[ConfigService],
+    //   useFactory : (config : ConfigService)=>{
+    //     return {
+    //         type : "better-sqlite3",
+    //         database :config.get<string>('DB_NAME'),
+    //         entities:[User , Report],
+    //         synchronize : true
+    //     }
+    //   }
+    // })
   //   TypeOrmModule.forRoot({
   //   type : "better-sqlite3",
   //   database :"db.sqlite",
@@ -38,16 +44,19 @@ import { UsersController } from './users/users.controller.js';
   //   synchronize : true
   // })
 
-    ,UsersModule, ReportsModule],
+    UsersModule, ReportsModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
+
+  constructor(private configService : ConfigService){}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(
       cookieSession({
-        keys : ['asdasd'],
-        maxAge : 24 * 60 * 60 * 1000})
+        keys: [this.configService.getOrThrow  <string>('COOKIE_SECRET')],
+        maxAge: 24 * 60 * 60 * 1000,
+      })
     ).forRoutes('*');
 
 
