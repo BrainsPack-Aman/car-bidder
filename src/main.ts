@@ -12,6 +12,7 @@ async function bootstrap() {
       whitelist:true,
     })
   )
+  console.log('Environment:', process.env.NODE_ENV);
   await app.listen(process.env.PORT ?? 3000);
 }
 await bootstrap();
