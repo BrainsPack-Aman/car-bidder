@@ -22,15 +22,16 @@
     "test:e2e": "cross-env NODE_ENV=test vitest run --config ./vitest.config.e2e.ts",
     "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-esm",
     "migration:generate": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:generate src/migrations/InitialSchema -d data-source.ts",
-  "migration:run:dev": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:run -d data-source.ts",
-  "migration:revert:dev": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:revert -d data-source.ts",
-  "migration:run:prod": "cross-env NODE_ENV=production typeorm migration:run -d dist/src/data-source.js"
+    "migration:run:dev": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:run -d data-source.ts",
+    "migration:revert:dev": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:revert -d data-source.ts",
+    "migration:run:prod": "cross-env NODE_ENV=production typeorm migration:run -d dist/src/data-source.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
     "@nestjs/config": "^12.0.1",
     "@nestjs/core": "^12.0.1",
     "@nestjs/platform-express": "^12.0.1",
+    "@nestjs/swagger": "^12.1.0",
     "@nestjs/typeorm": "^12.0.2",
     "@types/cookie-session": "^2.0.49",
     "better-sqlite3": "^12.11.1",
