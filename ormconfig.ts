@@ -1,115 +1,62 @@
-// const dbConfig = {
-//     synchronize: false,
-// };
-
-
-
-// switch (process.env.NODE_ENV) {
-//     case "development":
-//          Object.assign(dbConfig, {
-//             type: "better-sqlite3",
-//             database:  "db.sqlite",
-//             entities: [__dirname + "/src/**/*.entity.js"],
-           
-//         });
-//         break;  
-//     case "test":
-//         Object.assign(dbConfig, {
-//             type: "better-sqlite3",
-//             database:  "test.sqlite",
-//             entities: [__dirname + "/src/**/*.entity.ts"],
-           
-//         });
-//         break;
-
-//     case "production":
-       
-//         break;
-
-//     default:
-//         throw new Error(`Unknown environment`);
-// }
-
-// export default dbConfig;
-
-// import { User } from './users/users.entity.js';
-// import { Report } from './reports/reports.entity.js';
-
-// const dbConfig: any = {
-//     synchronize: false,
-// };
-
-// switch (process.env.NODE_ENV) {
-//     case 'development':
-//         Object.assign(dbConfig, {
-//             type: 'better-sqlite3',
-//             database: 'db.sqlite',
-//             entities: [User, Report],
-//         });
-//         break;
-
-//     case 'test':
-//         Object.assign(dbConfig, {
-//             type: 'better-sqlite3',
-//             database: 'test.sqlite',
-//             entities: [User, Report],
-//         });
-//         break;
-
-//     case 'production':
-//         Object.assign(dbConfig, {
-//             type: 'better-sqlite3',
-//             database: 'db.sqlite',
-//             entities: [User, Report],
-//         });
-//         break;
-
-//     default:
-//         throw new Error(`Unknown environment: ${process.env.NODE_ENV}`);
-// }
-
-// export default dbConfig;
-
 
 import { DataSourceOptions } from 'typeorm';
 import { User } from './src/users/users.entity.js';
 import { Report } from './src/reports/reports.entity.js';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const dbConfig : DataSourceOptions = {
-    type: 'better-sqlite3',
-    database: 'db.sqlite',
+const rootDir = dirname(fileURLToPath(import.meta.url));
+
+const commonConfig = {
     entities: [User, Report],
     synchronize: false,
-    migrations:['src/migrations/*.js'],
 };
 
+let dbConfig: DataSourceOptions;
 
 switch (process.env.NODE_ENV) {
     case 'development':
-        Object.assign(dbConfig, {
+        dbConfig = {
+            ...commonConfig,
+            type: 'better-sqlite3',
             database: 'db.sqlite',
-        });
+            migrations: [
+                join(rootDir, 'src/migrations/*.{js,ts}'),
+            ],
+        };
         break;
 
     case 'test':
-        Object.assign(dbConfig, {
+        dbConfig = {
+            ...commonConfig,
+            type: 'better-sqlite3',
             database: 'test.sqlite',
-        });
+            migrations: [
+                join(rootDir, 'src/migrations/*.{js,ts}'),
+            ],
+        };
         break;
+
     case 'production':
-        Object.assign(dbConfig, {
-            type:"postgres",
+        if (!process.env.DATABASE_URL) {
+            throw new Error('DATABASE_URL is required in production');
+        }
+
+        dbConfig = {
+            ...commonConfig,
+            type: 'postgres',
             url: process.env.DATABASE_URL,
-            migrationsRun: true,
-            entities:[__dirname + "/src/**/*.entity.js"], 
-            ssl:{
-                rejectUnauthorized: false
-            }
-        });
+            migrations: [
+                join(rootDir, 'src/migrations/*.js'),
+            ],
+            ssl: false,
+        };
         break;
 
     default:
-        throw new Error(`Unknown environment: ${process.env.NODE_ENV}`);
+        throw new Error(
+            `Unknown environment: ${process.env.NODE_ENV}`,
+        );
 }
 
 export default dbConfig;

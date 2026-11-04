@@ -20,7 +20,11 @@
     "test:cov": "cross-env NODE_ENV=test vitest run --coverage",
     "test:debug": "cross-env NODE_ENV=test vitest --inspect-brk --no-file-parallelism",
     "test:e2e": "cross-env NODE_ENV=test vitest run --config ./vitest.config.e2e.ts",
-    "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-esm"
+    "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-esm",
+    "migration:generate": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:generate src/migrations/InitialSchema -d data-source.ts",
+  "migration:run:dev": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:run -d data-source.ts",
+  "migration:revert:dev": "cross-env NODE_ENV=development typeorm-ts-node-esm migration:revert -d data-source.ts",
+  "migration:run:prod": "cross-env NODE_ENV=production typeorm migration:run -d dist/src/data-source.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
